@@ -14,5 +14,5 @@ public record Result
     public static Result Failure(Error error) => new(error);
 
     public static implicit operator Result(Error error)
-        => new(error);
+        => Failure(error);
 }
