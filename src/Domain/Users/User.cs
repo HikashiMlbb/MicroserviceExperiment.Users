@@ -1,6 +1,6 @@
 namespace Domain.Users;
 
-public class User
+public sealed class User
 {
     public UserId Id { get; set; } = null!;
     public UserEmail Email { get; set; } = null!;
