@@ -1,3 +1,3 @@
 namespace Domain.Users;
 
-public record UserEmail(string Email);
+public sealed record UserEmail(string Email);
