@@ -10,15 +10,8 @@ public record Result
         Error = error;
     }
 
-    public static Result Success()
-    {
-        return new Result();
-    }
-
-    public static Result Failure(Error error)
-    {
-        return new Result(error);
-    }
+    public static Result Success() => new();
+    public static Result Failure(Error error) => new(error);
 
     public static implicit operator Result(Error error)
         => new(error);
