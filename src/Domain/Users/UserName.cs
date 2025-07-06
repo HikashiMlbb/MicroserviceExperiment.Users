@@ -22,7 +22,7 @@ public sealed record UserName
 
     private static bool IsValid(string value)
     {
-        return value.Length is >= 4 and <= 20 && value.All(char.IsAsciiLetterOrDigit);
+        return !string.IsNullOrEmpty(value) && value.Length is >= 4 and <= 20 && value.All(char.IsAsciiLetterOrDigit);
     }
 
     #endregion
