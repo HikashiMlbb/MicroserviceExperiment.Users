@@ -19,4 +19,7 @@ public record Result
     {
         return new Result(error);
     }
+
+    public static implicit operator Result(Error error)
+        => new(error);
 }
