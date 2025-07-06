@@ -13,16 +13,21 @@ public sealed partial record UserEmail
 
     public static Result<UserEmail> Create(string value)
     {
-        var isMatch = MyRegex().IsMatch(value);
+        var isValid = IsValid(value);
 
-        return !isMatch
+        return !isValid
             ? UserErrors.EmailIsInvalid
             : new UserEmail(value);
     }
 
     #region Private implementation
 
-    private const string EmailRegex = @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
+    private static bool IsValid(string value)
+    {
+        return !string.IsNullOrEmpty(value) && MyRegex().IsMatch(value);
+    }
+    
+    private const string EmailRegex = @"^(?!.*\.\.)(?!\.)[a-z0-9]+(?:[._-][a-z0-9]+)*(\+[a-z0-9-]+)?@([a-z0-9-]+\.)+[a-z]{2,4}$";
 
     [GeneratedRegex(EmailRegex)]
     private static partial Regex MyRegex();

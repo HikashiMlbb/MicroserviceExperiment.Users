@@ -13,14 +13,14 @@ public sealed record UserName
 
     public static Result<UserName> Create(string value)
     {
-        return !Validate(value) 
+        return !IsValid(value) 
             ? UserErrors.UsernameIsInvalid 
             : new UserName(value);
     }
 
     #region Private implementation
 
-    private static bool Validate(string value)
+    private static bool IsValid(string value)
     {
         return value.Length is >= 4 and <= 20 && value.All(char.IsAsciiLetterOrDigit);
     }
