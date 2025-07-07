@@ -30,7 +30,7 @@ public class UserSignUpHandler
         var isUserExists = await _repo.IsExists(emailResult.Value!, usernameResult.Value!);
         if (isUserExists)
         {
-            return UserErrors.AlreadyExists;
+            return new Error("User.AlreadyExists", "User with given Email or Username already exists.");
         }
 
         var password = await _passwordService.Hash(passwordResult.Value!);
