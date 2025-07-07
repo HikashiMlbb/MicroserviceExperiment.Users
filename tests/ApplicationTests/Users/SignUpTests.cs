@@ -4,6 +4,7 @@ using Application.Users.SignUp;
 using Domain.Users;
 using Moq;
 using NUnit.Framework;
+using UserDomainErrors = Domain.Users.UserErrors;
 
 namespace ApplicationTests.Users;
 
@@ -44,7 +45,7 @@ public class SignUpTests
 
         // Assert
         Assert.That(result.IsSuccess, Is.False);
-        Assert.That(result.Error!, Is.EqualTo(UserErrors.EmailIsInvalid));
+        Assert.That(result.Error!, Is.EqualTo(UserDomainErrors.EmailIsInvalid));
         _repoMock.Verify(x => x.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>()), Times.Never);
     }
     
@@ -67,7 +68,7 @@ public class SignUpTests
 
         // Assert
         Assert.That(result.IsSuccess, Is.False);
-        Assert.That(result.Error!, Is.EqualTo(UserErrors.UsernameIsInvalid));
+        Assert.That(result.Error!, Is.EqualTo(UserDomainErrors.UsernameIsInvalid));
         _repoMock.Verify(x => x.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>()), Times.Never);
     }
     
@@ -90,7 +91,7 @@ public class SignUpTests
 
         // Assert
         Assert.That(result.IsSuccess, Is.False);
-        Assert.That(result.Error!, Is.EqualTo(UserErrors.PasswordIsOutOfRange));
+        Assert.That(result.Error!, Is.EqualTo(UserDomainErrors.PasswordIsOutOfRange));
         _repoMock.Verify(x => x.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>()), Times.Never);
     }
 }
