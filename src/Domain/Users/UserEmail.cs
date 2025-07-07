@@ -6,7 +6,7 @@ namespace Domain.Users;
 public sealed partial record UserEmail
 {
     public string Value { get; init; }
-    private UserEmail(string value)
+    internal UserEmail(string value)
     {
         Value = value;
     }
