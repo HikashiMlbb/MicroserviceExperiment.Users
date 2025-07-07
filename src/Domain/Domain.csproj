@@ -10,8 +10,8 @@
       <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
     </ItemGroup>
     
-    <PropertyGroup>
-        <InternalsVisibleTo>ApplicationTests</InternalsVisibleTo>
-    </PropertyGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="ApplicationTests" />
+    </ItemGroup>
 
 </Project>
