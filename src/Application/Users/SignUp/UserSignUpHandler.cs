@@ -21,10 +21,11 @@ public class UserSignUpHandler
     {
         var emailResult = UserEmail.Create(dto.Email);
         var usernameResult = UserName.Create(dto.Username);
+        var passwordResult = UserRawPassword.Create(dto.Password);
 
         if (!emailResult.IsSuccess) return emailResult.Error!;
         if (!usernameResult.IsSuccess) return usernameResult.Error!;
-        // TODO: Create raw password validation
+        if (!passwordResult.IsSuccess) return passwordResult.Error!;
 
         var isUserExists = await _repo.IsExists(emailResult.Value!, usernameResult.Value!);
         if (isUserExists)
@@ -32,7 +33,7 @@ public class UserSignUpHandler
             return new Error("User.AlreadyExists", "User with given Email or Username already exists.");
         }
 
-        var password = await _passwordService.Hash(dto.Password);
+        var password = await _passwordService.Hash(passwordResult.Value!);
 
         var newUser = await _repo.Create(emailResult.Value!, usernameResult.Value!, password);
         return await _tokenService.GenerateToken(new AuthorizationTokenPayload(newUser.Id.Value));
