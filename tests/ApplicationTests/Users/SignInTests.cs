@@ -74,4 +74,33 @@ public class SignInTests
         _passwordMock.Verify(x => x.Verify(It.IsAny<UserRawPassword>(), It.IsAny<UserPassword>()), Times.Once);
         _tokenMock.Verify(x => x.GenerateToken(It.IsAny<AuthorizationTokenPayload>()), Times.Never);
     }
+    
+    [Test]
+    public async Task CreateSuccessfully_ReturnsSuccess()
+    {
+        // Arrange
+        const string username = "SomeUsername";
+        const string password = "SomePassword";
+        var dto = new UserSignIn
+        {
+            Username = username,
+            Password = password
+        };
+        var userId = new UserId(15);
+        var expectedToken = $"Token #{userId}$$$";
+        var user = new User(userId, new UserEmail("someemail@mail.com"), new UserName(username), new UserPassword(password));
+        _repoMock.Setup(x => x.Fetch(It.IsAny<UserName>())).ReturnsAsync(user);
+        _passwordMock.Setup(x => x.Verify(It.IsAny<UserRawPassword>(), It.IsAny<UserPassword>())).ReturnsAsync(true);
+        _tokenMock.Setup(x => x.GenerateToken(It.IsAny<AuthorizationTokenPayload>())).ReturnsAsync(expectedToken);
+        
+        // Act
+        var result = await _handler.Handle(dto);
+
+        // Assert
+        Assert.That(result.IsSuccess, Is.True);
+        Assert.That(result.Value!, Is.EqualTo(expectedToken));
+        _repoMock.Verify(x => x.Fetch(It.IsAny<UserName>()), Times.Once);
+        _passwordMock.Verify(x => x.Verify(It.IsAny<UserRawPassword>(), It.IsAny<UserPassword>()), Times.Once);
+        _tokenMock.Verify(x => x.GenerateToken(It.IsAny<AuthorizationTokenPayload>()), Times.Once);
+    }
 }
