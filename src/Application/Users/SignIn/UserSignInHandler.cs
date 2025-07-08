@@ -26,13 +26,10 @@ public class UserSignInHandler
         if (!passwordResult.IsSuccess) return passwordResult.Error!;
         
         var foundUser = await _userRepository.Fetch(usernameResult.Value!);
-        if (foundUser is null)
-        {
-            return new Error("User.NotFound", "User with given Username has not been found.");
-        }
+        if (foundUser is null)return UserErrors.NotFound;
 
         var isPasswordCorrect = await _passwordService.Verify(passwordResult.Value!, foundUser.Password);
-        if (!isPasswordCorrect) return new Error("User.LoginFailed", "The entered password is incorrect.");
+        if (!isPasswordCorrect) return UserErrors.LoginFailed;
 
         return await _tokenService.GenerateToken(new AuthorizationTokenPayload(foundUser.Id));
     }
