@@ -1,3 +1,5 @@
+using Domain.Users;
+
 namespace Application.Abstractions;
 
-public record AuthorizationTokenPayload(int Id);
+public record AuthorizationTokenPayload(UserId Id);
