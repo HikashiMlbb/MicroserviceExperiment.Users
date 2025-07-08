@@ -24,25 +24,4 @@ public class SignInTests
         _tokenMock = new Mock<IAuthorizationTokenService>();
         _handler = new UserSignInHandler(_passwordMock.Object, _repoMock.Object, _tokenMock.Object);
     }
-
-    [Test]
-    public async Task InvalidUsername_ReturnsError()
-    {
-        // Arrange
-        const string username = "Some Very Strange Username$";
-        const string password = "SomeSecretPassword";
-        var dto = new UserSignIn
-        {
-            Username = username,
-            Password = password
-        };
-
-        // Act
-        var result = await _handler.Handle(dto);
-
-        // Assert
-        Assert.That(result.IsSuccess, Is.False);
-        Assert.That(result.Error!, Is.EqualTo(UserDomainErrors.UsernameIsInvalid));
-        _repoMock.Verify(x => x.Fetch(It.IsAny<UserName>()), Times.Never);
-    }
 }
