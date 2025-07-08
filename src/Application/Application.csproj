@@ -7,11 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
-    </ItemGroup>
-    
-    <ItemGroup>
-        <InternalsVisibleTo Include="ApplicationTests" />
+      <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>
 
 </Project>
