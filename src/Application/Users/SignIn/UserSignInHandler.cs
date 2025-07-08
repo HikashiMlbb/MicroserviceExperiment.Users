@@ -34,6 +34,6 @@ public class UserSignInHandler
         var isPasswordCorrect = await _passwordService.Verify(passwordResult.Value!, foundUser.Password);
         if (!isPasswordCorrect) return new Error("User.LoginFailed", "The entered password is incorrect.");
 
-        return await _tokenService.GenerateToken(new AuthorizationTokenPayload(foundUser.Id.Value));
+        return await _tokenService.GenerateToken(new AuthorizationTokenPayload(foundUser.Id));
     }
 }
