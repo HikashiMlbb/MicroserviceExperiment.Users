@@ -36,6 +36,6 @@ public class UserSignUpHandler
         var password = await _passwordService.Hash(passwordResult.Value!);
 
         var newUser = await _repo.Create(emailResult.Value!, usernameResult.Value!, password);
-        return await _tokenService.GenerateToken(new AuthorizationTokenPayload(newUser.Id.Value));
+        return await _tokenService.GenerateToken(new AuthorizationTokenPayload(newUser.Id));
     }
 }
