@@ -6,7 +6,7 @@ public record UserRawPassword
 {
     public string Value { get; init; }
     
-    private UserRawPassword(string value)
+    internal UserRawPassword(string value)
     {
         Value = value;
     }

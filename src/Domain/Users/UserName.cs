@@ -6,7 +6,7 @@ public sealed record UserName
 {
     public string Value { get; init; }
 
-    private UserName(string value)
+    internal UserName(string value)
     {
         Value = value;
     }
