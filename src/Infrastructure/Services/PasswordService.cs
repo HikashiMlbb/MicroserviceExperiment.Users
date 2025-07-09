@@ -5,9 +5,10 @@ namespace Infrastructure.Services;
 
 public class PasswordService : IPasswordService
 {
-    public Task<UserPassword> Hash(UserRawPassword rawPassword)
+    public async Task<UserPassword> Hash(UserRawPassword rawPassword)
     {
-        throw new NotImplementedException();
+        var hash = await Task.Run(() => BCrypt.Net.BCrypt.HashPassword(rawPassword.Value)!);
+        return new UserPassword(hash);
     }
 
     public Task<bool> Verify(UserRawPassword passwordResultValue, UserPassword userPassword)
