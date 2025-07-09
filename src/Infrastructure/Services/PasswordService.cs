@@ -11,8 +11,8 @@ public class PasswordService : IPasswordService
         return new UserPassword(hash);
     }
 
-    public Task<bool> Verify(UserRawPassword passwordResultValue, UserPassword userPassword)
+    public async Task<bool> Verify(UserRawPassword passwordResultValue, UserPassword userPassword)
     {
-        throw new NotImplementedException();
+        return await Task.Run(() => BCrypt.Net.BCrypt.Verify(passwordResultValue.Value, userPassword.Value));
     }
 }
