@@ -1,13 +1,16 @@
 using Application.Users;
+using Dapper;
 using Domain.Users;
 
 namespace Persistence.Users;
 
-public class UserRepository : IUserRepository
+public class UserRepository(IDatabaseConnectionFactory factory) : IUserRepository
 {
-    public Task<bool> IsExists(UserEmail email, UserName username)
+    public async Task<bool> IsExists(UserEmail email, UserName username)
     {
-        throw new NotImplementedException();
+        using var db = factory.Create();
+        const string sql = "SELECT 1 FROM \"Users\" WHERE \"Email\" = @Email OR \"Username\" = @Username LIMIT 1;";
+        return await db.QueryFirstOrDefaultAsync<bool>(sql, new { Email = email.Value, Username = username.Value });
     }
 
     public Task<User> Create(UserEmail email, UserName username, UserPassword password)
