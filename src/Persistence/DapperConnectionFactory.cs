@@ -1,11 +1,12 @@
 using System.Data;
+using Npgsql;
 
 namespace Persistence;
 
-public class DapperConnectionFactory : IDatabaseConnectionFactory
+public class DapperConnectionFactory(string connectionString) : IDatabaseConnectionFactory
 {
     public IDbConnection Create()
     {
-        throw new NotImplementedException();
+        return new NpgsqlConnection(connectionString);
     }
 }
