@@ -25,8 +25,27 @@ public class UserRepository(IDatabaseConnectionFactory factory) : IUserRepositor
         return new User(new UserId(id), email, username, password);
     }
 
-    public Task<User?> Fetch(UserName username)
+    public async Task<User?> Fetch(UserName username)
     {
-        throw new NotImplementedException();
+        using var db = factory.Create();
+        const string sql = """
+                           SELECT
+                                "Id",
+                                "Email",
+                                "Username" AS "Name",
+                                "Password"
+                           FROM "Users"
+                           WHERE "Username" = @Username
+                           LIMIT 1;
+                           """;
+        var raw = await db.QueryFirstOrDefaultAsync<RawUser>(sql, new { Username = username.Value });
+        return raw is null
+            ? null
+            : new User(
+                id: new UserId(raw.Id),
+                email: new UserEmail(raw.Email),
+                name: new UserName(raw.Name),
+                password: new UserPassword(raw.Password)
+            );
     }
 }
