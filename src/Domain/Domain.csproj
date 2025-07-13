@@ -14,9 +14,5 @@
         <InternalsVisibleTo Include="ApplicationTests" />
         <InternalsVisibleTo Include="InfrastructureTests" />
     </ItemGroup>
-    
-    <ItemGroup>
-        <InternalsVisibleTo Include="Persistence" />
-    </ItemGroup>
 
 </Project>
