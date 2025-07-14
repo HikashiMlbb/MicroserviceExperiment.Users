@@ -13,6 +13,7 @@
     <ItemGroup>
         <InternalsVisibleTo Include="ApplicationTests" />
         <InternalsVisibleTo Include="InfrastructureTests" />
+        <InternalsVisibleTo Include="PersistenceTests" />
     </ItemGroup>
     
     <ItemGroup>
