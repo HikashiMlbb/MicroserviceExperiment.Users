@@ -1,4 +1,5 @@
 using System.Data;
+using Dapper;
 using Persistence;
 using Testcontainers.PostgreSql;
 
@@ -17,6 +18,17 @@ public class UserRepositoryTests
         _container = new PostgreSqlBuilder().Build();
         await _container.StartAsync();
         _factory = new DapperConnectionFactory(_container.GetConnectionString());
+
+        using var connection = _factory.Create();
+        const string sql = """
+                           CREATE TABLE IF NOT EXISTS "Users" (
+                               "Id" SERIAL PRIMARY KEY,
+                               "Email" VARCHAR,
+                               "Username" VARCHAR,
+                               "Password" VARCHAR
+                           );
+                           """;
+        await connection.ExecuteAsync(sql);
     }
 
     [OneTimeTearDown]
