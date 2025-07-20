@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfrastructureTests", "tests\InfrastructureTests\InfrastructureTests.csproj", "{A0D3B876-730C-4FD2-A83C-BB9ECD48249B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "src\Persistence\Persistence.csproj", "{D987FFE4-AF4D-4F84-80D4-3C03E493424E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersistenceTests", "tests\PersistenceTests\PersistenceTests.csproj", "{9192A45E-15F9-4092-93B1-DB555AAC1DD9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,8 @@ Global
 		{C855C16F-FE75-4F3E-8C10-131C35CFF5CF} = {645D6B8F-9757-4BEA-8742-D70FED9BE9E1}
 		{F59059F1-1FEB-4FE1-B98F-09D000B99A7B} = {858FE2B2-C6FF-4BED-904F-728BAD41E22A}
 		{A0D3B876-730C-4FD2-A83C-BB9ECD48249B} = {645D6B8F-9757-4BEA-8742-D70FED9BE9E1}
+		{D987FFE4-AF4D-4F84-80D4-3C03E493424E} = {858FE2B2-C6FF-4BED-904F-728BAD41E22A}
+		{9192A45E-15F9-4092-93B1-DB555AAC1DD9} = {645D6B8F-9757-4BEA-8742-D70FED9BE9E1}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{42F4B5DD-CC49-49DD-BAA2-B5468FD14878}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -64,6 +70,14 @@ Global
 		{A0D3B876-730C-4FD2-A83C-BB9ECD48249B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0D3B876-730C-4FD2-A83C-BB9ECD48249B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0D3B876-730C-4FD2-A83C-BB9ECD48249B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D987FFE4-AF4D-4F84-80D4-3C03E493424E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D987FFE4-AF4D-4F84-80D4-3C03E493424E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D987FFE4-AF4D-4F84-80D4-3C03E493424E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D987FFE4-AF4D-4F84-80D4-3C03E493424E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9192A45E-15F9-4092-93B1-DB555AAC1DD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9192A45E-15F9-4092-93B1-DB555AAC1DD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9192A45E-15F9-4092-93B1-DB555AAC1DD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9192A45E-15F9-4092-93B1-DB555AAC1DD9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{55683A14-A5D9-4926-A074-A4F06E0FCCBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
