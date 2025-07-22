@@ -6,11 +6,13 @@ namespace Application.Users.SignUp;
 
 public class UserSignUpHandler
 {
+    private readonly IUnitOfWork _uow;
     private readonly IPasswordService _passwordService;
     private readonly IAuthorizationTokenService _tokenService;
 
-    public UserSignUpHandler(IPasswordService passwordService, IAuthorizationTokenService tokenService)
+    public UserSignUpHandler(IUnitOfWork uow, IPasswordService passwordService, IAuthorizationTokenService tokenService)
     {
+        _uow = uow;
         _passwordService = passwordService;
         _tokenService = tokenService;
     }
@@ -24,19 +26,17 @@ public class UserSignUpHandler
         if (!emailResult.IsSuccess) return emailResult.Error!;
         if (!usernameResult.IsSuccess) return usernameResult.Error!;
         if (!passwordResult.IsSuccess) return passwordResult.Error!;
-
-        // TODO:
-        // var isUserExists = await _repo.IsExists(emailResult.Value!, usernameResult.Value!);
-        // if (isUserExists)
-        // {
-        //     return UserErrors.AlreadyExists;
-        // }
+        
+        var isUserExists = await _uow.Users.IsExists(emailResult.Value!, usernameResult.Value!);
+        if (isUserExists)
+        {
+            return UserErrors.AlreadyExists;
+        }
 
         var password = await _passwordService.Hash(passwordResult.Value!);
-
-        // TODO:
-        // var newUser = await _repo.Create(emailResult.Value!, usernameResult.Value!, password);
-        // return await _tokenService.GenerateToken(new AuthorizationTokenPayload(newUser.Id));
-        return string.Empty;
+        
+        var newUser = await _uow.Users.Create(emailResult.Value!, usernameResult.Value!, password);
+        await _uow.Commit();
+        return await _tokenService.GenerateToken(new AuthorizationTokenPayload(newUser.Id));
     }
 }
