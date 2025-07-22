@@ -7,13 +7,11 @@ namespace Application.Users.SignIn;
 public class UserSignInHandler
 {
     private readonly IPasswordService _passwordService;
-    private readonly IUserRepository _userRepository;
     private readonly IAuthorizationTokenService _tokenService;
 
-    public UserSignInHandler(IPasswordService passwordService, IUserRepository userRepository, IAuthorizationTokenService tokenService)
+    public UserSignInHandler(IPasswordService passwordService, IAuthorizationTokenService tokenService)
     {
         _passwordService = passwordService;
-        _userRepository = userRepository;
         _tokenService = tokenService;
     }
 
@@ -25,12 +23,14 @@ public class UserSignInHandler
         if (!usernameResult.IsSuccess) return usernameResult.Error!;
         if (!passwordResult.IsSuccess) return passwordResult.Error!;
         
-        var foundUser = await _userRepository.Fetch(usernameResult.Value!);
-        if (foundUser is null)return UserErrors.NotFound;
+        // TODO:
+        // var foundUser = await _userRepository.Fetch(usernameResult.Value!);
+        // if (foundUser is null)return UserErrors.NotFound;
 
-        var isPasswordCorrect = await _passwordService.Verify(passwordResult.Value!, foundUser.Password);
-        if (!isPasswordCorrect) return UserErrors.LoginFailed;
-
-        return await _tokenService.GenerateToken(new AuthorizationTokenPayload(foundUser.Id));
+        // TODO:
+        // var isPasswordCorrect = await _passwordService.Verify(passwordResult.Value!, foundUser.Password);
+        // if (!isPasswordCorrect) return UserErrors.LoginFailed;
+        // return await _tokenService.GenerateToken(new AuthorizationTokenPayload(foundUser.Id));
+        return string.Empty;
     }
 }
