@@ -12,7 +12,7 @@ namespace ApplicationTests.Users;
 [TestFixture]
 public class SignUpTests
 {
-    private Mock<IUserRepository> _repoMock;
+    private Mock<IUnitOfWork> _uowMock;
     private Mock<IPasswordService> _passwordMock;
     private Mock<IAuthorizationTokenService> _tokenMock;
     private UserSignUpHandler _handler;
@@ -20,11 +20,11 @@ public class SignUpTests
     [SetUp]
     public void Setup()
     {
-        _repoMock = new Mock<IUserRepository>();
+        _uowMock = new Mock<IUnitOfWork>();
         _passwordMock = new Mock<IPasswordService>();
         _tokenMock = new Mock<IAuthorizationTokenService>();
         
-        _handler = new UserSignUpHandler(_repoMock.Object, _passwordMock.Object, _tokenMock.Object);
+        _handler = new UserSignUpHandler(_uowMock.Object, _passwordMock.Object, _tokenMock.Object);
     }
     
     [Test]
@@ -41,7 +41,7 @@ public class SignUpTests
             Password = password
         };
 
-        _repoMock.Setup(x => x.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>())).ReturnsAsync(true);
+        _uowMock.Setup(x => x.Users.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>())).ReturnsAsync(true);
         
         // Act
         var result = await _handler.Handle(dto);
@@ -49,7 +49,7 @@ public class SignUpTests
         // Assert
         Assert.That(result.IsSuccess, Is.False);
         Assert.That(result.Error!, Is.EqualTo(UserApplicationErrors.AlreadyExists));
-        _repoMock.Verify(x => x.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>()), Times.Once);
+        _uowMock.Verify(x => x.Users.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>()), Times.Once);
         _passwordMock.Verify(x => x.Hash(It.IsAny<UserRawPassword>()), Times.Never);
     }
     
@@ -70,9 +70,9 @@ public class SignUpTests
         var hashedPassword = new UserPassword("^s0m3-h@5h3d_p@55w0rd$");
         var newUser = new User(new UserId(15), new UserEmail(email), new UserName(name), hashedPassword);
         const string authorizationToken = "this-is-an-authorization-token";
-        _repoMock.Setup(x => x.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>())).ReturnsAsync(false);
+        _uowMock.Setup(x => x.Users.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>())).ReturnsAsync(false);
         _passwordMock.Setup(x => x.Hash(It.IsAny<UserRawPassword>())).ReturnsAsync(hashedPassword);
-        _repoMock.Setup(x => x.Create(It.IsAny<UserEmail>(), It.IsAny<UserName>(), It.IsAny<UserPassword>())).ReturnsAsync(newUser);
+        _uowMock.Setup(x => x.Users.Create(It.IsAny<UserEmail>(), It.IsAny<UserName>(), It.IsAny<UserPassword>())).ReturnsAsync(newUser);
         _tokenMock.Setup(x => x.GenerateToken(It.IsAny<AuthorizationTokenPayload>())).ReturnsAsync(authorizationToken);
         
         // Act
@@ -81,9 +81,9 @@ public class SignUpTests
         // Assert
         Assert.That(result.IsSuccess, Is.True);
         Assert.That(result.Value!, Is.EqualTo(authorizationToken));
-        _repoMock.Verify(x => x.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>()), Times.Once);
+        _uowMock.Verify(x => x.Users.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>()), Times.Once);
         _passwordMock.Verify(x => x.Hash(It.IsAny<UserRawPassword>()), Times.Once);
-        _repoMock.Verify(x => x.Create(It.IsAny<UserEmail>(), It.IsAny<UserName>(), It.IsAny<UserPassword>()), Times.Once);
+        _uowMock.Verify(x => x.Users.Create(It.IsAny<UserEmail>(), It.IsAny<UserName>(), It.IsAny<UserPassword>()), Times.Once);
         _tokenMock.Verify(x => x.GenerateToken(It.IsAny<AuthorizationTokenPayload>()), Times.Once);
     }
 }
