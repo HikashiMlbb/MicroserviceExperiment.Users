@@ -57,4 +57,9 @@ api.MapPost("/sign-up", async ([FromBody]ApiSignUpContract contract, [FromServic
     return Results.Ok();
 });
 
+api.MapPost("/sign-in", () =>
+{
+    return Results.Ok();
+});
+
 app.Run();
