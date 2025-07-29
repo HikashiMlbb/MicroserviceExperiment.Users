@@ -55,8 +55,16 @@ api.MapPost("/sign-up", async ([FromBody]ApiSignUpContract contract, [FromServic
         Username = contract.Username,
         Password = contract.Password
     };
-    await handler.Handle(dto);
-    return Results.Ok();
+    var result = await handler.Handle(dto);
+
+    if (!result.IsSuccess)
+    {
+        if (result.Error == UserErrors.AlreadyExists) return Results.Conflict();
+
+        return Results.BadRequest();
+    }
+    
+    return Results.Ok(result.Value);
 });
 
 api.MapPost("/sign-in", async ([FromBody]ApiSignInContract contract, [FromServices]UserSignInHandler handler) =>
