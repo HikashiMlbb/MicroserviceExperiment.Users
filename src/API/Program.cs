@@ -1,6 +1,7 @@
 using API.Contracts;
 using Application.Abstractions;
 using Application.Users;
+using Application.Users.SignIn;
 using Application.Users.SignUp;
 using dotenv.net;
 using Infrastructure.Services;
@@ -19,6 +20,7 @@ builder.Configuration.AddEnvironmentVariables();
 #region Application Layer
 
 builder.Services.AddScoped<UserSignUpHandler>();
+builder.Services.AddScoped<UserSignInHandler>();
 
 #endregion
 
@@ -57,9 +59,27 @@ api.MapPost("/sign-up", async ([FromBody]ApiSignUpContract contract, [FromServic
     return Results.Ok();
 });
 
-api.MapPost("/sign-in", () =>
+api.MapPost("/sign-in", async ([FromBody]ApiSignInContract contract, [FromServices]UserSignInHandler handler) =>
 {
-    return Results.Ok();
+    var dto = new UserSignIn
+    {
+        Username = contract.Username,
+        Password = contract.Password
+    };
+    var result = await handler.Handle(dto);
+    
+    if (!result.IsSuccess)
+    {
+        if (result.Error == UserErrors.NotFound || result.Error == UserErrors.LoginFailed)
+        {
+            return Results.Unauthorized();
+        }
+
+        return Results.BadRequest();
+    }
+
+    return Results.Ok(result.Value);
+
 });
 
 app.Run();
