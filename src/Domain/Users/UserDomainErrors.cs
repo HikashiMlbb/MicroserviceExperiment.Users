@@ -2,9 +2,11 @@ using SharedKernel;
 
 namespace Domain.Users;
 
+public record UserDomainError(string? Code = null, string? Message = null) : Error(Code, Message);
+
 public static class UserDomainErrors
 {
-    public static Error EmailIsInvalid { get; } = new("Email.Invalid", "The given email has invalid format.");
-    public static Error UsernameIsInvalid { get; } = new("Username.Invalid", "The given username has invalid format.");
-    public static Error PasswordIsOutOfRange { get; } = new("Password.OutOfRange", "The given password is too long or too short.");
+    public static readonly UserDomainError EmailIsInvalid = new("Email.Invalid", "The given email has invalid format.");
+    public static readonly UserDomainError UsernameIsInvalid = new("Username.Invalid", "The given username has invalid format.");
+    public static readonly UserDomainError PasswordIsOutOfRange = new("Password.OutOfRange", "The given password is too long or too short.");
 }
