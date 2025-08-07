@@ -14,7 +14,7 @@ public record UserRawPassword
     public static Result<UserRawPassword> Create(string value)
     {
         return !IsValid(value)
-            ? UserErrors.PasswordIsOutOfRange
+            ? UserDomainErrors.PasswordIsOutOfRange
             : new UserRawPassword(value);
     }
 
