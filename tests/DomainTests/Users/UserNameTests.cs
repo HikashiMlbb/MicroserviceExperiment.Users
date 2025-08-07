@@ -31,7 +31,7 @@ public class UserNameTests
         Assert.Multiple(() =>
         {
             Assert.That(result.IsSuccess, Is.False);
-            Assert.That(result.Error, Is.EqualTo(UserErrors.UsernameIsInvalid));
+            Assert.That(result.Error, Is.EqualTo(UserDomainErrors.UsernameIsInvalid));
         });
     }
     
@@ -47,7 +47,7 @@ public class UserNameTests
         Assert.Multiple(() =>
         {
             Assert.That(result.IsSuccess, Is.False);
-            Assert.That(result.Error, Is.EqualTo(UserErrors.UsernameIsInvalid));
+            Assert.That(result.Error, Is.EqualTo(UserDomainErrors.UsernameIsInvalid));
         });
     }
 
@@ -65,7 +65,7 @@ public class UserNameTests
         Assert.Multiple(() =>
         {
             Assert.That(result.IsSuccess, Is.False);
-            Assert.That(result.Error, Is.EqualTo(UserErrors.UsernameIsInvalid));
+            Assert.That(result.Error, Is.EqualTo(UserDomainErrors.UsernameIsInvalid));
         });
     }
 

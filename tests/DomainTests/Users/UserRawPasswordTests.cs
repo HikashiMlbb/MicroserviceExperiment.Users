@@ -36,7 +36,7 @@ public class UserRawPasswordTests
 
             // Assert
             Assert.That(result.IsSuccess, Is.False);
-            Assert.That(result.Error, Is.EqualTo(UserErrors.PasswordIsOutOfRange));
+            Assert.That(result.Error, Is.EqualTo(UserDomainErrors.PasswordIsOutOfRange));
         });
     }
 
@@ -53,7 +53,7 @@ public class UserRawPasswordTests
 
             // Assert
             Assert.That(result.IsSuccess, Is.False);
-            Assert.That(result.Error, Is.EqualTo(UserErrors.PasswordIsOutOfRange));
+            Assert.That(result.Error, Is.EqualTo(UserDomainErrors.PasswordIsOutOfRange));
         });
     }
 

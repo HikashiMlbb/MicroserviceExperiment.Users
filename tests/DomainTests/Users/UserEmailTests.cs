@@ -52,7 +52,7 @@ public class UserEmailTests
         Assert.Multiple(() =>
         {
             Assert.That(result.IsSuccess, Is.False);
-            Assert.That(result.Error, Is.EqualTo(UserErrors.EmailIsInvalid));
+            Assert.That(result.Error, Is.EqualTo(UserDomainErrors.EmailIsInvalid));
         });
     }
 
@@ -69,7 +69,7 @@ public class UserEmailTests
         Assert.Multiple(() =>
         {
             Assert.That(result.IsSuccess, Is.False);
-            Assert.That(result.Error, Is.EqualTo(UserErrors.EmailIsInvalid));
+            Assert.That(result.Error, Is.EqualTo(UserDomainErrors.EmailIsInvalid));
         });
     }
 
@@ -86,7 +86,7 @@ public class UserEmailTests
         Assert.Multiple(() =>
         {
             Assert.That(result.IsSuccess, Is.False);
-            Assert.That(result.Error, Is.EqualTo(UserErrors.EmailIsInvalid));
+            Assert.That(result.Error, Is.EqualTo(UserDomainErrors.EmailIsInvalid));
         });
     }
 
@@ -103,7 +103,7 @@ public class UserEmailTests
         Assert.Multiple(() =>
         {
             Assert.That(result.IsSuccess, Is.False);
-            Assert.That(result.Error, Is.EqualTo(UserErrors.EmailIsInvalid));
+            Assert.That(result.Error, Is.EqualTo(UserDomainErrors.EmailIsInvalid));
         });
     }
 
@@ -120,7 +120,7 @@ public class UserEmailTests
         Assert.Multiple(() =>
         {
             Assert.That(result.IsSuccess, Is.False);
-            Assert.That(result.Error, Is.EqualTo(UserErrors.EmailIsInvalid));
+            Assert.That(result.Error, Is.EqualTo(UserDomainErrors.EmailIsInvalid));
         });
     }
 
@@ -137,7 +137,7 @@ public class UserEmailTests
         Assert.Multiple(() =>
         {
             Assert.That(result.IsSuccess, Is.False);
-            Assert.That(result.Error, Is.EqualTo(UserErrors.EmailIsInvalid));
+            Assert.That(result.Error, Is.EqualTo(UserDomainErrors.EmailIsInvalid));
         });
     }
 
@@ -154,7 +154,7 @@ public class UserEmailTests
         Assert.Multiple(() =>
         {
             Assert.That(result.IsSuccess, Is.False);
-            Assert.That(result.Error, Is.EqualTo(UserErrors.EmailIsInvalid));
+            Assert.That(result.Error, Is.EqualTo(UserDomainErrors.EmailIsInvalid));
         });
     }
 }
