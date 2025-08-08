@@ -30,7 +30,7 @@ public class UserSignUpHandler
         var isUserExists = await _uow.Users.IsExists(emailResult.Value!, usernameResult.Value!);
         if (isUserExists)
         {
-            return UserErrors.AlreadyExists;
+            return UserApplicationErrors.AlreadyExists;
         }
 
         var password = await _passwordService.Hash(passwordResult.Value!);
