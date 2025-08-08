@@ -26,10 +26,10 @@ public class UserSignInHandler
         if (!passwordResult.IsSuccess) return passwordResult.Error!;
         
         var foundUser = await _uow.Users.Fetch(usernameResult.Value!);
-        if (foundUser is null) return UserErrors.NotFound;
+        if (foundUser is null) return UserApplicationErrors.NotFound;
 
         var isPasswordCorrect = await _passwordService.Verify(passwordResult.Value!, foundUser.Password);
-        if (!isPasswordCorrect) return UserErrors.LoginFailed;
+        if (!isPasswordCorrect) return UserApplicationErrors.LoginFailed;
         
         return await _tokenService.GenerateToken(new AuthorizationTokenPayload(foundUser.Id));
     }

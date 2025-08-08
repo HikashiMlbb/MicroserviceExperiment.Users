@@ -14,7 +14,7 @@ public sealed record UserName
     public static Result<UserName> Create(string value)
     {
         return !IsValid(value) 
-            ? UserErrors.UsernameIsInvalid 
+            ? UserDomainErrors.UsernameIsInvalid 
             : new UserName(value);
     }
 

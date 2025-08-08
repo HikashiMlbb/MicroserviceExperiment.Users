@@ -16,7 +16,7 @@ public sealed partial record UserEmail
         var isValid = IsValid(value);
 
         return !isValid
-            ? UserErrors.EmailIsInvalid
+            ? UserDomainErrors.EmailIsInvalid
             : new UserEmail(value);
     }
 
