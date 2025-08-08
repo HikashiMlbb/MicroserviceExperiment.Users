@@ -7,6 +7,7 @@ using Domain.Users;
 using dotenv.net;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
+using Migration;
 using Persistence;
 using SharedKernel;
 
@@ -88,4 +89,5 @@ api.MapPost("/sign-in", async ([FromBody]ApiSignInContract contract, [FromServic
     };
 });
 
+DatabaseMigrator.MigrateDatabase(connectionString);
 app.Run();
