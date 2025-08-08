@@ -4,8 +4,6 @@ using Application.Users.SignIn;
 using Domain.Users;
 using Moq;
 using NUnit.Framework;
-using UserDomainErrors = Domain.Users.UserErrors;
-using UserErrors = Application.Users.UserErrors;
 
 namespace ApplicationTests.Users;
 
@@ -44,7 +42,7 @@ public class SignInTests
 
         // Assert
         Assert.That(result.IsSuccess, Is.False);
-        Assert.That(result.Error!, Is.EqualTo(UserErrors.NotFound));
+        Assert.That(result.Error!, Is.EqualTo(UserApplicationErrors.NotFound));
         _uowMock.Verify(x => x.Users.Fetch(It.IsAny<UserName>()), Times.Once);
         _passwordMock.Verify(x => x.Verify(It.IsAny<UserRawPassword>(), It.IsAny<UserPassword>()), Times.Never);
     }
@@ -69,7 +67,7 @@ public class SignInTests
 
         // Assert
         Assert.That(result.IsSuccess, Is.False);
-        Assert.That(result.Error!, Is.EqualTo(UserErrors.LoginFailed));
+        Assert.That(result.Error!, Is.EqualTo(UserApplicationErrors.LoginFailed));
         _uowMock.Verify(x => x.Users.Fetch(It.IsAny<UserName>()), Times.Once);
         _passwordMock.Verify(x => x.Verify(It.IsAny<UserRawPassword>(), It.IsAny<UserPassword>()), Times.Once);
         _tokenMock.Verify(x => x.GenerateToken(It.IsAny<AuthorizationTokenPayload>()), Times.Never);

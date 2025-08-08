@@ -4,8 +4,6 @@ using Application.Users.SignUp;
 using Domain.Users;
 using Moq;
 using NUnit.Framework;
-using UserDomainErrors = Domain.Users.UserErrors;
-using UserApplicationErrors = Application.Users.UserErrors;
 
 namespace ApplicationTests.Users;
 
