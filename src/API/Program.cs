@@ -3,10 +3,12 @@ using Application.Abstractions;
 using Application.Users;
 using Application.Users.SignIn;
 using Application.Users.SignUp;
+using Domain.Users;
 using dotenv.net;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
+using SharedKernel;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,15 +58,15 @@ api.MapPost("/sign-up", async ([FromBody]ApiSignUpContract contract, [FromServic
         Password = contract.Password
     };
     var result = await handler.Handle(dto);
-
-    if (!result.IsSuccess)
-    {
-        if (result.Error == UserErrors.AlreadyExists) return Results.Conflict();
-
-        return Results.BadRequest();
-    }
     
-    return Results.Ok(result.Value);
+    if (result.IsSuccess) return Results.Ok(result.Value);
+
+    return result.Error switch
+    {
+        UserDomainError domain => Results.BadRequest(new { domain.Code, domain.Message }),
+        UserApplicationError application => Results.Conflict(new { application.Code, application.Message }),
+        _ => Results.StatusCode(500)
+    };
 });
 
 api.MapPost("/sign-in", async ([FromBody]ApiSignInContract contract, [FromServices]UserSignInHandler handler) =>
@@ -75,19 +77,15 @@ api.MapPost("/sign-in", async ([FromBody]ApiSignInContract contract, [FromServic
         Password = contract.Password
     };
     var result = await handler.Handle(dto);
-    
-    if (!result.IsSuccess)
+
+    if (result.IsSuccess) return Results.Ok(result.Value);
+
+    return result.Error switch
     {
-        if (result.Error == UserErrors.NotFound || result.Error == UserErrors.LoginFailed)
-        {
-            return Results.Unauthorized();
-        }
-
-        return Results.BadRequest();
-    }
-
-    return Results.Ok(result.Value);
-
+        UserApplicationError => Results.Unauthorized(),
+        UserDomainError domain => Results.BadRequest(new { domain.Code, domain.Message }),
+        _ => Results.StatusCode(500)
+    };
 });
 
 app.Run();
