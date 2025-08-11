@@ -1,4 +1,5 @@
 using API.Contracts;
+using API.Endpoints;
 using Application.Abstractions;
 using Application.Users;
 using Application.Users.SignIn;
@@ -50,44 +51,7 @@ var app = builder.Build();
 
 var api = app.MapGroup("/api");
 
-api.MapPost("/sign-up", async ([FromBody]ApiSignUpContract contract, [FromServices]UserSignUpHandler handler) =>
-{
-    var dto = new UserSignUp
-    {
-        Email = contract.Email,
-        Username = contract.Username,
-        Password = contract.Password
-    };
-    var result = await handler.Handle(dto);
-    
-    if (result.IsSuccess) return Results.Ok(result.Value);
-
-    return result.Error switch
-    {
-        UserDomainError domain => Results.BadRequest(new { domain.Code, domain.Message }),
-        UserApplicationError application => Results.Conflict(new { application.Code, application.Message }),
-        _ => Results.StatusCode(500)
-    };
-});
-
-api.MapPost("/sign-in", async ([FromBody]ApiSignInContract contract, [FromServices]UserSignInHandler handler) =>
-{
-    var dto = new UserSignIn
-    {
-        Username = contract.Username,
-        Password = contract.Password
-    };
-    var result = await handler.Handle(dto);
-
-    if (result.IsSuccess) return Results.Ok(result.Value);
-
-    return result.Error switch
-    {
-        UserApplicationError => Results.Unauthorized(),
-        UserDomainError domain => Results.BadRequest(new { domain.Code, domain.Message }),
-        _ => Results.StatusCode(500)
-    };
-});
+api.MapUserEndpoints();
 
 DatabaseMigrator.MigrateDatabase(connectionString);
 app.Run();
