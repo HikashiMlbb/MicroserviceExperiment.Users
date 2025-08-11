@@ -1,5 +1,6 @@
 using API.Contracts;
 using Application.Users;
+using Application.Users.SignIn;
 using Application.Users.SignUp;
 using Domain.Users;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ public static class UserEndpoints
         var api = app.MapGroup($"{prefix}/users");
 
         api.MapPost("/sign-up", SignUp);
-        api.MapPost("/sign-in");
+        api.MapPost("/sign-in", SignIn);
     }
 
     #region Endpoint implementation
@@ -36,6 +37,25 @@ public static class UserEndpoints
         {
             UserDomainError domain => Results.BadRequest(new { domain.Code, domain.Message }),
             UserApplicationError application => Results.Conflict(new { application.Code, application.Message }),
+            _ => Results.StatusCode(500)
+        };
+    }
+    
+    private static async Task<IResult> SignIn([FromBody]ApiSignInContract contract, [FromServices]UserSignInHandler handler)
+    {
+        var dto = new UserSignIn
+        {
+            Username = contract.Username,
+            Password = contract.Password
+        };
+        var result = await handler.Handle(dto);
+
+        if (result.IsSuccess) return Results.Ok(result.Value);
+
+        return result.Error switch
+        {
+            UserApplicationError => Results.Unauthorized(),
+            UserDomainError domain => Results.BadRequest(new { domain.Code, domain.Message }),
             _ => Results.StatusCode(500)
         };
     }
