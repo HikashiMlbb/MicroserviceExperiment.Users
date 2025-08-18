@@ -1,7 +1,7 @@
 using Application.Abstractions;
 using Domain.Users;
 
-namespace Infrastructure.Services;
+namespace Infrastructure.Users;
 
 public class PasswordService : IPasswordService
 {
