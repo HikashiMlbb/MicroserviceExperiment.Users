@@ -6,7 +6,7 @@ using Application.Users.SignIn;
 using Application.Users.SignUp;
 using Domain.Users;
 using dotenv.net;
-using Infrastructure.Services;
+using Infrastructure.Users;
 using Microsoft.AspNetCore.Mvc;
 using Migration;
 using Persistence;

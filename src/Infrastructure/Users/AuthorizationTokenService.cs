@@ -3,7 +3,7 @@ using Application.Abstractions;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Infrastructure.Services;
+namespace Infrastructure.Users;
 
 public class AuthorizationTokenService(AuthorizationTokenDescription tokenDescription) : IAuthorizationTokenService
 {

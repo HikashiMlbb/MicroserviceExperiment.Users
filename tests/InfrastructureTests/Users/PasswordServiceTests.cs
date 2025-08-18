@@ -1,5 +1,5 @@
 using Domain.Users;
-using Infrastructure.Services;
+using Infrastructure.Users;
 
 namespace InfrastructureTests.Users;
 

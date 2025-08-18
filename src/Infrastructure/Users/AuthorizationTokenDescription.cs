@@ -2,7 +2,7 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Infrastructure.Services;
+namespace Infrastructure.Users;
 
 public class AuthorizationTokenDescription(IOptions<AuthorizationTokenConfig> config)
 {
