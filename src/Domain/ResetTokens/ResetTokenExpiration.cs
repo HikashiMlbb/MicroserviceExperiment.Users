@@ -16,7 +16,7 @@ public sealed record ResetTokenExpiration
 
     public static Result<ResetTokenExpiration> Create(DateTime value)
     {
-        var timespan = DateTime.UtcNow - value;
+        var timespan = value - DateTime.UtcNow;
         if (timespan < MinExpiration || timespan > MaxExpiration)
         {
             return ResetTokenDomainErrors.ExpirationOutOfRange;
