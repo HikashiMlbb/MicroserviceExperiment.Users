@@ -7,7 +7,7 @@ namespace Persistence.Users;
 
 public class UserRepository(IDbConnection connection, IDbTransaction transaction) : IUserRepository
 {
-    public async Task<bool> IsExists(UserEmail email, UserName username)
+    public async Task<bool> IsExists(UserEmail? email = null, UserName? username = null)
     {
         const string sql = "SELECT 1 FROM \"Users\" WHERE \"Email\" = @Email OR \"Username\" = @Username LIMIT 1;";
         return await connection.QueryFirstOrDefaultAsync<bool>(sql, new { Email = email.Value, Username = username.Value }, transaction);
@@ -45,5 +45,15 @@ public class UserRepository(IDbConnection connection, IDbTransaction transaction
                 name: new UserName(raw.Name),
                 password: new UserPassword(raw.Password)
             );
+    }
+
+    public async Task ChangePassword(UserEmail email, UserPassword password)
+    {
+        const string sql = """
+                           UPDATE "Users"
+                           SET "Password" = @Password
+                           WHERE "Email" = @Email
+                           """;
+        await connection.ExecuteAsync(sql, new { Password = password.Value, Email = email.Value }, transaction);
     }
 }
