@@ -7,5 +7,5 @@ public interface IResetTokenRepository
 {
     public Task<UserEmail?> Find(ResetTokenValue tokenValue);
     public Task Save(ResetToken token);
-    public Task<bool> IsRequested(UserEmail? emailResultValue);
+    public Task<bool> IsRequested(UserEmail emailResultValue);
 }
