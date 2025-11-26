@@ -43,7 +43,7 @@ public class UserRepositoryTests
     public async Task IsExists_NotFound_ReturnsFalse()
     {
         // Arrange
-        using var scope = await TestTransactionScope.Create(_factory);
+        using var scope = await UserTestTransactionScope.Create(_factory);
         var uow = scope.Uow;
         var email = new UserEmail("someemail@mail.com");
         var username = new UserName("SomeUser");
@@ -59,7 +59,7 @@ public class UserRepositoryTests
     public async Task IsExists_NotFound_AnotherRecord_ReturnsFalse()
     {
         // Arrange
-        using var scope = await TestTransactionScope.Create(_factory);
+        using var scope = await UserTestTransactionScope.Create(_factory);
         var uow = scope.Uow;
         var connection = scope.Connection;
         var transaction = scope.Transaction;
@@ -79,7 +79,7 @@ public class UserRepositoryTests
     public async Task IsExists_FoundByEmail_ReturnsTrue()
     {
         // Arrange
-        using var scope = await TestTransactionScope.Create(_factory);
+        using var scope = await UserTestTransactionScope.Create(_factory);
         var uow = scope.Uow;
         var connection = scope.Connection;
         var transaction = scope.Transaction;
@@ -99,7 +99,7 @@ public class UserRepositoryTests
     public async Task IsExists_FoundByUsername_ReturnsTrue()
     {
         // Arrange
-        using var scope = await TestTransactionScope.Create(_factory);
+        using var scope = await UserTestTransactionScope.Create(_factory);
         var uow = scope.Uow;
         var connection = scope.Connection;
         var transaction = scope.Transaction;
@@ -119,7 +119,7 @@ public class UserRepositoryTests
     public async Task Create_Successfully_ReturnsSuccess()
     {
         // Arrange
-        using var scope = await TestTransactionScope.Create(_factory);
+        using var scope = await UserTestTransactionScope.Create(_factory);
         var uow = scope.Uow;
         
         var email = new UserEmail("someemail@mail.com");
@@ -139,7 +139,7 @@ public class UserRepositoryTests
     [Test]
     public async Task Create_Twice_ReturnsException()
     {
-        using var scope = await TestTransactionScope.Create(_factory);
+        using var scope = await UserTestTransactionScope.Create(_factory);
         var uow = scope.Uow;
         
         var email = new UserEmail("someemail@mail.com");
@@ -162,7 +162,7 @@ public class UserRepositoryTests
     public async Task Fetch_NotExists_ReturnsNull()
     {
         // Arrange
-        using var scope = await TestTransactionScope.Create(_factory);
+        using var scope = await UserTestTransactionScope.Create(_factory);
         var uow = scope.Uow;
         
         var username = new UserName("Vasily");
@@ -178,7 +178,7 @@ public class UserRepositoryTests
     public async Task Fetch_Exists_ReturnsUser()
     {
         // Arrange
-        using var scope = await TestTransactionScope.Create(_factory);
+        using var scope = await UserTestTransactionScope.Create(_factory);
         var uow = scope.Uow;
         var connection = scope.Connection;
         var transaction = scope.Transaction;
@@ -195,5 +195,27 @@ public class UserRepositoryTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
+    }
+    
+    [Test]
+    public async Task ChangePassword_Successfully()
+    {
+        // Arrange
+        using var scope = await UserTestTransactionScope.Create(_factory);
+        var uow = scope.Uow;
+        
+        var email = new UserEmail("someemail@mail.com");
+        var username = new UserName("User1234");
+        var password = new UserPassword("SomePassword");
+        
+        await scope.Connection.ExecuteAsync("INSERT INTO \"Users\" VALUES (DEFAULT, @Email, @Username, 'Password1234');", new { Email = email.Value, Username = username.Value }, scope.Transaction);
+
+        // Act
+        await uow.Users.ChangePassword(email, password);
+        var result = await uow.Users.Fetch(username);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.Password, Is.EqualTo(password));
     }
 }
