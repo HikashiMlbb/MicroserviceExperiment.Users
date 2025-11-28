@@ -52,6 +52,7 @@ var app = builder.Build();
 var api = app.MapGroup("/api");
 
 api.MapUserEndpoints();
+api.MapResetTokenEndpoints();
 
 DatabaseMigrator.MigrateDatabase(connectionString);
 app.Run();
