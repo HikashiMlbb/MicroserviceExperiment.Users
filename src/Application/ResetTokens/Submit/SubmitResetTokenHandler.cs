@@ -6,14 +6,14 @@ using SharedKernel;
 
 namespace Application.ResetTokens.Submit;
 
-public class SubmitResetTokenHandler(IResetTokenRepository tokenRepo, IPasswordService passwordService, IUserRepository userRepo)
+public class SubmitResetTokenHandler(IUnitOfWork uow, IPasswordService passwordService)
 {
     public async Task<Result<string?>> Handle(SubmitResetToken submit)
     {
         if (string.IsNullOrEmpty(submit.Token)) return ResetTokenErrors.Empty;
         var tokenValue = new ResetTokenValue(submit.Token);
 
-        var targetEmail = await tokenRepo.Find(tokenValue);
+        var targetEmail = await uow.ResetTokens.Find(tokenValue);
         if (targetEmail is null) return ResetTokenErrors.NotExistsOrExpired;
         
         if (string.IsNullOrEmpty(submit.NewPassword)) return Result<string?>.Success(null);
@@ -24,7 +24,7 @@ public class SubmitResetTokenHandler(IResetTokenRepository tokenRepo, IPasswordS
         if (!newPassword.IsSuccess) return newPassword.Error;
 
         var password = await passwordService.Hash(newPassword.Value);
-        await userRepo.ChangePassword(targetEmail, password);
+        await uow.Users.ChangePassword(targetEmail, password);
 
         return string.Empty;
     }
