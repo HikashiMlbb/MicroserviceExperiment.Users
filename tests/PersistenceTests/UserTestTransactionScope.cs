@@ -19,7 +19,7 @@ public class UserTestTransactionScope : IDisposable
     
     public static Task<UserTestTransactionScope> Create(IDatabaseConnectionFactory factory)
     {
-        var uow = new UnitOfWork(factory);
+        var uow = new UnitOfWork(factory, null);
         var connection = uow.Connection;
         var transaction = uow.Transaction;
         return Task.FromResult(new UserTestTransactionScope(uow, connection, transaction));

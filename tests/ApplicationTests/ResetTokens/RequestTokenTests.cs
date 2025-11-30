@@ -12,22 +12,19 @@ namespace ApplicationTests.ResetTokens;
 public class RequestTokenTests
 {
     private RequestResetTokenHandler _handler;
-    private Mock<IUserRepository> _userRepositoryMock;
-    private Mock<IResetTokenRepository> _tokenRepositoryMock;
+    private Mock<IUnitOfWork> _uow;
     private Mock<IResetTokenService> _tokenServiceMock;
     private Mock<INotificationService> _notificationServiceMock;
 
     [SetUp]
     public void Setup()
     {
-        _userRepositoryMock = new Mock<IUserRepository>();
-        _tokenRepositoryMock = new Mock<IResetTokenRepository>();
+        _uow = new Mock<IUnitOfWork>();
         _tokenServiceMock = new Mock<IResetTokenService>();
         _notificationServiceMock = new Mock<INotificationService>();
 
         _handler = new RequestResetTokenHandler(
-            _userRepositoryMock.Object,
-            _tokenRepositoryMock.Object,
+            _uow.Object,
             _tokenServiceMock.Object,
             _notificationServiceMock.Object
         );
@@ -44,11 +41,11 @@ public class RequestTokenTests
 
         // Assert
         Assert.That(result.Error, Is.EqualTo(ResetTokenErrors.ValidationError));
-        _userRepositoryMock.Verify(x => x.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>()), Times.Never);
-        _tokenRepositoryMock.Verify(x => x.IsRequested(It.IsAny<UserEmail>()), Times.Never);
+        _uow.Verify(x => x.Users.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>()), Times.Never);
+        _uow.Verify(x => x.ResetTokens.IsRequested(It.IsAny<UserEmail>()), Times.Never);
         _tokenServiceMock.Verify(x => x.Generate(), Times.Never);
         _tokenServiceMock.Verify(x => x.GetExpiration(), Times.Never);
-        _tokenRepositoryMock.Verify(x => x.Save(It.IsAny<ResetToken>()), Times.Never);
+        _uow.Verify(x => x.ResetTokens.Save(It.IsAny<ResetToken>()), Times.Never);
         _notificationServiceMock.Verify(x => x.Notify(It.IsAny<ResetToken>()), Times.Never);
     }
 
@@ -57,18 +54,18 @@ public class RequestTokenTests
     {
         // Arrange
         var request = new RequestResetToken { Email = "test@example.com" };
-        _userRepositoryMock.Setup(x => x.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>())).ReturnsAsync(false);
+        _uow.Setup(x => x.Users.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>())).ReturnsAsync(false);
 
         // Act
         var result = await _handler.Handle(request);
 
         // Assert
         Assert.That(result.Error, Is.EqualTo(UserApplicationErrors.NotFound));
-        _userRepositoryMock.Verify(x => x.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>()), Times.Once);
-        _tokenRepositoryMock.Verify(x => x.IsRequested(It.IsAny<UserEmail>()), Times.Never);
+        _uow.Verify(x => x.Users.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>()), Times.Once);
+        _uow.Verify(x => x.ResetTokens.IsRequested(It.IsAny<UserEmail>()), Times.Never);
         _tokenServiceMock.Verify(x => x.Generate(), Times.Never);
         _tokenServiceMock.Verify(x => x.GetExpiration(), Times.Never);
-        _tokenRepositoryMock.Verify(x => x.Save(It.IsAny<ResetToken>()), Times.Never);
+        _uow.Verify(x => x.ResetTokens.Save(It.IsAny<ResetToken>()), Times.Never);
         _notificationServiceMock.Verify(x => x.Notify(It.IsAny<ResetToken>()), Times.Never);
     }
 
@@ -77,8 +74,8 @@ public class RequestTokenTests
     {
         // Arrange
         var request = new RequestResetToken { Email = "test@example.com" };
-        _userRepositoryMock.Setup(x => x.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>())).ReturnsAsync(true);
-        _tokenRepositoryMock.Setup(x => x.IsRequested(It.IsAny<UserEmail>())).ReturnsAsync(true);
+        _uow.Setup(x => x.Users.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>())).ReturnsAsync(true);
+        _uow.Setup(x => x.ResetTokens.IsRequested(It.IsAny<UserEmail>())).ReturnsAsync(true);
 
         // Act
         var result = await _handler.Handle(request);
@@ -86,11 +83,11 @@ public class RequestTokenTests
         // Assert
         Assert.That(result.Error, Is.EqualTo(ResetTokenErrors.AlreadyRequested));
         
-        _userRepositoryMock.Verify(x => x.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>()), Times.Once);
-        _tokenRepositoryMock.Verify(x => x.IsRequested(It.IsAny<UserEmail>()), Times.Once);
+        _uow.Verify(x => x.Users.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>()), Times.Once);
+        _uow.Verify(x => x.ResetTokens.IsRequested(It.IsAny<UserEmail>()), Times.Once);
         _tokenServiceMock.Verify(x => x.Generate(), Times.Never);
         _tokenServiceMock.Verify(x => x.GetExpiration(), Times.Never);
-        _tokenRepositoryMock.Verify(x => x.Save(It.IsAny<ResetToken>()), Times.Never);
+        _uow.Verify(x => x.ResetTokens.Save(It.IsAny<ResetToken>()), Times.Never);
         _notificationServiceMock.Verify(x => x.Notify(It.IsAny<ResetToken>()), Times.Never);
     }
 
@@ -99,8 +96,8 @@ public class RequestTokenTests
     {
         // Arrange
         var request = new RequestResetToken { Email = "test@example.com" };
-        _userRepositoryMock.Setup(x => x.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>())).ReturnsAsync(true);
-        _tokenRepositoryMock.Setup(x => x.IsRequested(It.IsAny<UserEmail>())).ReturnsAsync(false);
+        _uow.Setup(x => x.Users.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>())).ReturnsAsync(true);
+        _uow.Setup(x => x.ResetTokens.IsRequested(It.IsAny<UserEmail>())).ReturnsAsync(false);
         _tokenServiceMock.Setup(x => x.Generate()).ReturnsAsync(new ResetTokenValue("f923929jjgfddg"));
         _tokenServiceMock.Setup(x => x.GetExpiration()).ReturnsAsync(ResetTokenExpiration.Create(System.DateTime.UtcNow.AddHours(1)).Value!);
 
@@ -109,11 +106,11 @@ public class RequestTokenTests
 
         // Assert
         Assert.That(result.IsSuccess, Is.True);
-        _userRepositoryMock.Verify(x => x.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>()), Times.Once);
-        _tokenRepositoryMock.Verify(x => x.IsRequested(It.IsAny<UserEmail>()), Times.Once);
+        _uow.Verify(x => x.Users.IsExists(It.IsAny<UserEmail>(), It.IsAny<UserName>()), Times.Once);
+        _uow.Verify(x => x.ResetTokens.IsRequested(It.IsAny<UserEmail>()), Times.Once);
         _tokenServiceMock.Verify(x => x.Generate(), Times.Once);
         _tokenServiceMock.Verify(x => x.GetExpiration(), Times.Once);
-        _tokenRepositoryMock.Verify(x => x.Save(It.IsAny<ResetToken>()), Times.Once);
+        _uow.Verify(x => x.ResetTokens.Save(It.IsAny<ResetToken>()), Times.Once);
         _notificationServiceMock.Verify(x => x.Notify(It.IsAny<ResetToken>()), Times.Once);
     }
 }
