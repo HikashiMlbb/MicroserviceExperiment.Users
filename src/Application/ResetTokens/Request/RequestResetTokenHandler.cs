@@ -6,23 +6,23 @@ using SharedKernel;
 
 namespace Application.ResetTokens.Request;
 
-public class RequestResetTokenHandler(IUserRepository userRepo, IResetTokenRepository tokenRepo, IResetTokenService tokenService, INotificationService notificationService)
+public class RequestResetTokenHandler(IUnitOfWork uow, IResetTokenService tokenService, INotificationService notificationService)
 {
     public async Task<Result> Handle(RequestResetToken request)
     {
         var emailResult = UserEmail.Create(request.Email);
         if (!emailResult.IsSuccess) return ResetTokenErrors.ValidationError;
 
-        var isExists = await userRepo.IsExists(emailResult.Value);
+        var isExists = await uow.Users.IsExists(emailResult.Value);
         if (!isExists) return UserApplicationErrors.NotFound;
 
-        var isRequested = await tokenRepo.IsRequested(emailResult.Value);
+        var isRequested = await uow.ResetTokens.IsRequested(emailResult.Value);
         if (isRequested) return ResetTokenErrors.AlreadyRequested;
 
         var tokenValue = await tokenService.Generate();
         var tokenExpiration = await tokenService.GetExpiration();
         var token = new ResetToken(emailResult.Value, tokenValue, tokenExpiration);
-        await tokenRepo.Save(token);
+        await uow.ResetTokens.Save(token);
         await notificationService.Notify(token);
         
         return Result.Success();
