@@ -1,5 +1,9 @@
 using System.Data;
+using Application.Abstractions;
+using Application.ResetTokens;
 using Application.Users;
+using Microsoft.Extensions.Caching.Distributed;
+using Persistence.ResetTokens;
 using Persistence.Users;
 
 namespace Persistence;
@@ -8,16 +12,21 @@ public class UnitOfWork : IUnitOfWork
 {
     private bool _isDisposed;
     private IUserRepository? _users;
+    private IResetTokenRepository? _resetTokens;
     public IUserRepository Users => _users ??= new UserRepository(Connection, Transaction);
+
+    public IResetTokenRepository ResetTokens => _resetTokens ??= new ResetTokenRepository(_cache);
 
     public IDbConnection Connection { get; }
     public IDbTransaction Transaction { get; }
+    private readonly IDistributedCache _cache;
 
-    public UnitOfWork(IDatabaseConnectionFactory factory)
+    public UnitOfWork(IDatabaseConnectionFactory factory, IDistributedCache cache)
     {
         Connection = factory.Create();
         Connection.Open();
         Transaction = Connection.BeginTransaction();
+        _cache = cache;
     }
 
     public Task Commit()
