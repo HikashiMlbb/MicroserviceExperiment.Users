@@ -10,7 +10,7 @@ public class UserRepository(IDbConnection connection, IDbTransaction transaction
     public async Task<bool> IsExists(UserEmail? email = null, UserName? username = null)
     {
         const string sql = "SELECT 1 FROM \"Users\" WHERE \"Email\" = @Email OR \"Username\" = @Username LIMIT 1;";
-        return await connection.QueryFirstOrDefaultAsync<bool>(sql, new { Email = email.Value, Username = username.Value }, transaction);
+        return await connection.QueryFirstOrDefaultAsync<bool>(sql, new { Email = email?.Value, Username = username?.Value }, transaction);
     }
 
     public async Task<User> Create(UserEmail email, UserName username, UserPassword password)

@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "src\API\API.csproj",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Migration", "src\Migration\Migration.csproj", "{10D3BFE4-1172-4BDB-BE69-5E24943F7F96}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.Tests", "tests\API.Tests\API.Tests.csproj", "{0AC6C17B-5CAB-47E4-90E8-2871E06CBA99}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,7 @@ Global
 		{9192A45E-15F9-4092-93B1-DB555AAC1DD9} = {645D6B8F-9757-4BEA-8742-D70FED9BE9E1}
 		{9BCDB874-754A-4BEA-BE46-53EC991E6BF4} = {858FE2B2-C6FF-4BED-904F-728BAD41E22A}
 		{10D3BFE4-1172-4BDB-BE69-5E24943F7F96} = {858FE2B2-C6FF-4BED-904F-728BAD41E22A}
+		{0AC6C17B-5CAB-47E4-90E8-2871E06CBA99} = {645D6B8F-9757-4BEA-8742-D70FED9BE9E1}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{42F4B5DD-CC49-49DD-BAA2-B5468FD14878}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -92,6 +95,10 @@ Global
 		{10D3BFE4-1172-4BDB-BE69-5E24943F7F96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10D3BFE4-1172-4BDB-BE69-5E24943F7F96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10D3BFE4-1172-4BDB-BE69-5E24943F7F96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AC6C17B-5CAB-47E4-90E8-2871E06CBA99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AC6C17B-5CAB-47E4-90E8-2871E06CBA99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AC6C17B-5CAB-47E4-90E8-2871E06CBA99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AC6C17B-5CAB-47E4-90E8-2871E06CBA99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{55683A14-A5D9-4926-A074-A4F06E0FCCBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

@@ -2,6 +2,6 @@ namespace Infrastructure.ResetTokens;
 
 public class RabbitMqSettings
 {
-    public string ConnectionString { get; init; } = null!;
-    public string QueueName { get; set; }
+    public string ConnectionString { get; set; } = null!;
+    public string QueueName { get; set; } = null!;
 }
