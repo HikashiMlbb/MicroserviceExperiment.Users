@@ -2,6 +2,7 @@ using API.Contracts;
 using API.Endpoints;
 using Application.Abstractions;
 using Application.ResetTokens.Request;
+using Application.ResetTokens.Submit;
 using Application.Users;
 using Application.Users.SignIn;
 using Application.Users.SignUp;
@@ -30,6 +31,7 @@ builder.Services.AddScoped<UserSignUpHandler>();
 builder.Services.AddScoped<UserSignInHandler>();
 
 builder.Services.AddScoped<RequestResetTokenHandler>();
+builder.Services.AddScoped<SubmitResetTokenHandler>();
 
 #endregion
 
@@ -79,4 +81,4 @@ api.MapResetTokenEndpoints();
 DatabaseMigrator.MigrateDatabase(connectionString);
 app.Run();
 
-public partial class Program;
+public abstract partial class Program;
