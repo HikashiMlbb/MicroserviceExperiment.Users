@@ -25,6 +25,7 @@ public class SubmitResetTokenHandler(IUnitOfWork uow, IPasswordService passwordS
 
         var password = await passwordService.Hash(newPassword.Value);
         await uow.Users.ChangePassword(targetEmail, password);
+        await uow.Commit();
 
         return string.Empty;
     }
