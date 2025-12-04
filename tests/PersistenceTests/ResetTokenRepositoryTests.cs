@@ -58,13 +58,13 @@ public class ResetTokenRepositoryTests
         // Act
         await _repo.Save(resetToken);
         var foundEmailResult = await _service.GetStringAsync(token.Value);
-        var isEmailRequested = await _service.GetStringAsync(email.Value);
+        var foundToken = await _service.GetStringAsync(email.Value);
 
         // Assert
         Assert.That(foundEmailResult, Is.Not.Null);
-        Assert.That(isEmailRequested, Is.Not.Null);
+        Assert.That(foundToken, Is.Not.Null);
         Assert.That(foundEmailResult, Is.EqualTo(email.Value));
-        Assert.That(isEmailRequested, Is.Empty);
+        Assert.That(foundToken, Is.EqualTo(token.Value));
         
         // Clean
         await _service.RemoveAsync(token.Value);

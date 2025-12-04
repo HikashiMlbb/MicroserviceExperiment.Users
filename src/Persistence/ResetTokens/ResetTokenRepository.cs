@@ -22,7 +22,7 @@ public class ResetTokenRepository(IDistributedCache cache) : IResetTokenReposito
         var options = new DistributedCacheEntryOptions { AbsoluteExpiration = expiration };
         
         await cache.SetStringAsync(token, email, options);
-        await cache.SetStringAsync(email, string.Empty, options);
+        await cache.SetStringAsync(email, token, options);
     }
 
     public async Task<bool> IsRequested(UserEmail emailResultValue)
