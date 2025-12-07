@@ -24,6 +24,7 @@ if (builder.Environment.IsDevelopment())
 }
 
 builder.Configuration.AddEnvironmentVariables();
+builder.Services.AddHealthChecks();
 
 #region Application Layer
 
@@ -72,6 +73,8 @@ builder.Services.AddStackExchangeRedisCache(setup =>
 #endregion
 
 var app = builder.Build();
+
+app.MapHealthChecks("/healthz");
 
 var api = app.MapGroup("/api");
 
