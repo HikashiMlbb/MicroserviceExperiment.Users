@@ -17,6 +17,11 @@ CACHE_CONNECTION = "* Redis Cache Connection String *"
 
 ## Endpoints
 
+### Health Check
+#### `GET /healthz`
+
+---
+
 ### User Endpoints
 
 #### `POST /api/users/sign-up:`
