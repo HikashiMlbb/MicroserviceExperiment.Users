@@ -37,6 +37,6 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ secrets.DOCKERHUB_USERNAME }}/msvc-users:${{ env.GITHUB_SHORT_COMMIT_HASH }}
-            ${{ env.REGISTRY }}/${{ secrets.DOCKERHUB_USERNAME }}/msvc-users:latest
+            ${{ env.REGISTRY }}/${{ env.REPO }}:${{ env.GITHUB_SHORT_COMMIT_HASH }}
+            ${{ env.REGISTRY }}/${{ env.REPO }}:latest
 
