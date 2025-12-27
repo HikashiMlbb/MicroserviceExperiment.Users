@@ -8,6 +8,7 @@ namespace Infrastructure.ResetTokens;
 
 public class NotificationService : INotificationService, IAsyncDisposable
 {
+    private readonly EmailTemplateService _emailTemplate;
     private readonly string _queueName;
     private readonly string _tokenUrl;
     private readonly IConnection _connection;
@@ -15,8 +16,9 @@ public class NotificationService : INotificationService, IAsyncDisposable
 
     private bool _isDisposed;
 
-    public NotificationService(RabbitMqSettings settings, ResetTokenSettings tokenSettings)
+    public NotificationService(RabbitMqSettings settings, ResetTokenSettings tokenSettings, EmailTemplateService emailTemplate)
     {
+        _emailTemplate = emailTemplate;
         _queueName = settings.QueueName;
         _tokenUrl = tokenSettings.Url;
         
@@ -33,7 +35,8 @@ public class NotificationService : INotificationService, IAsyncDisposable
     
     public async Task Notify(ResetToken token)
     {
-        var body = $"<h1>We're detected you're trying to reset password. If it was you, please, follow the link below:</h1><p><a href=\"{_tokenUrl}/{token.Token.Value}\"></p><p>But if it wasn't you, please, ignore this email.</p><p>Best wishes, Hikashi no Development!</p>";
+        var uri = new Uri(new Uri(_tokenUrl, UriKind.Absolute), new Uri(token.Token.Value, UriKind.Relative));
+        var body = await _emailTemplate.Parse(uri);
         var message = new Message("Password Reset", body, token.Email.Value);
         var messageBytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));
         await _channel.BasicPublishAsync(string.Empty, _queueName, body: messageBytes);

@@ -50,8 +50,15 @@ builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IAuthorizationTokenService, AuthorizationTokenService>();
 builder.Services.AddSingleton<AuthorizationTokenDescription>();
 
+const string emailTemplatePath = "/var/templates/email.html";
+var emailTemplate = File.Exists(emailTemplatePath)
+    ? await File.ReadAllTextAsync(emailTemplatePath)
+    : throw new FileNotFoundException($"Email Template File is not exists. Path: {emailTemplatePath}");
+
 builder.Services.AddScoped<IResetTokenService, ResetTokenService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddSingleton<EmailTemplateService>();
+builder.Services.AddSingleton<EmailTemplate>(new EmailTemplate { Template = emailTemplate });
 builder.Services.AddSingleton<ResetTokenSettings>(x => x.GetRequiredService<IOptions<ResetTokenSettings>>().Value);
 builder.Services.AddSingleton<RabbitMqSettings>(x => x.GetRequiredService<IOptions<RabbitMqSettings>>().Value);
 
