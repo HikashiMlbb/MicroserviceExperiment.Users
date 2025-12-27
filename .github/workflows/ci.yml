@@ -8,13 +8,16 @@ jobs:
   build_and_test:
     name: Build & Test
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+      - name: Create empty template file
+        run: sudo mkdir -p /var/templates && sudo touch /var/templates/email.html
       - name: Restore .NET
         run: dotnet restore
       - name: Build .NET
