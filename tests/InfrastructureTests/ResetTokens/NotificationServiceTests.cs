@@ -44,10 +44,14 @@ public class NotificationServiceTests
         await using var connection = await factory.CreateConnectionAsync();
         await using var channel = await connection.CreateChannelAsync();
 
+        const string html = "<h1>We're detected you're trying to reset password. If it was you, please, follow the link below:</h1><p><a href=\"${{ token }}\"></p><p>But if it wasn't you, please, ignore this email.</p><p>Best wishes, Hikashi no Development!</p>";
+        var template = new EmailTemplate { Template = html };
+        var templateService = new EmailTemplateService(template);
+        
         const string queueName = "test-queue-name";
         var rabbitMqSettings = new RabbitMqSettings { ConnectionString = _container.GetConnectionString(), QueueName = queueName };
         var resetTokenSettings = new ResetTokenSettings { Expiration = TimeSpan.FromHours(2), Url = "http://test-url" };
-        await using var service = new NotificationService(rabbitMqSettings, resetTokenSettings);
+        await using var service = new NotificationService(rabbitMqSettings, resetTokenSettings, templateService);
 
         var tokenValue = Guid.NewGuid().ToString();
         var token = new ResetToken(UserEmail.Create("some-email@mail.com").Value!, new ResetTokenValue(tokenValue), ResetTokenExpiration.Create(DateTime.UtcNow + TimeSpan.FromHours(2)).Value!);
