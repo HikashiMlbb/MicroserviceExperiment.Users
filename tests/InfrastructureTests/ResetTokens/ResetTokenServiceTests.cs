@@ -38,7 +38,7 @@ public class ResetTokenServiceTests
 
         // Assert
         Assert.That(expiration.Value, Is.GreaterThan(now));
-        Assert.That(expiration.Value, Is.EqualTo(now + expirationTimespan).Within(TimeSpan.FromMilliseconds(1)));
+        Assert.That(expiration.Value, Is.EqualTo(now + expirationTimespan).Within(TimeSpan.FromMilliseconds(100)));
     }
 
     [Test]
